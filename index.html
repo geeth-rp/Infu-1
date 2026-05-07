@@ -7,144 +7,304 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       min-height: 100vh;
-      background: linear-gradient(160deg, #fff0f5 0%, #fce4ec 40%, #ffd6e7 100%);
+      background: #fce4ec;
       font-family: 'Nunito', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 16px 60px;
+      justify-content: flex-start;
       overflow-x: hidden;
     }
-    .petal {
-      position: fixed;
-      pointer-events: none;
-      opacity: 0;
-      font-size: 22px;
-      animation: falling linear infinite;
-      z-index: 0;
-    }
-    @keyframes falling {
-      0%   { transform: translateY(-60px) rotate(0deg); opacity: 0.7; }
-      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
-    .card {
-      position: relative;
-      z-index: 1;
-      background: rgba(255,255,255,0.80);
-      backdrop-filter: blur(14px);
-      border-radius: 32px;
-      border: 2px solid rgba(255,182,213,0.55);
-      padding: 36px 28px 40px;
-      max-width: 420px;
+
+    /* ── Phone shell ── */
+    .phone {
       width: 100%;
-      box-shadow: 0 8px 40px rgba(220,100,140,0.13);
+      max-width: 390px;
+      min-height: 100vh;
+      background: #fff0f5;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    .avatar-wrap { display: flex; justify-content: center; margin-bottom: 6px; }
+
+    /* ── Hero blurry banner ── */
+    .hero {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #ffb6d9 0%, #ff85b3 40%, #ffd6e7 70%, #ffaece 100%);
+    }
+    /* blurry floating blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(28px);
+      opacity: 0.7;
+    }
+    .blob1 { width:160px; height:160px; background:#ff6fb0; top:-30px; left:-30px; }
+    .blob2 { width:130px; height:130px; background:#ffd6e7; top:20px; right:-20px; }
+    .blob3 { width:100px; height:100px; background:#ff4488; bottom:-20px; left:60px; }
+    .blob4 { width:90px;  height:90px;  background:#ffb3d1; top:60px; right:60px; }
+
+    /* floating petal decorations in hero */
+    .hero-petal {
+      position: absolute;
+      font-size: 28px;
+      opacity: 0.55;
+      animation: floatpetal 6s ease-in-out infinite;
+    }
+    .hero-petal:nth-child(5) { top:18px; left:20px; animation-delay:0s; }
+    .hero-petal:nth-child(6) { top:50px; right:30px; animation-delay:1s; font-size:22px; }
+    .hero-petal:nth-child(7) { bottom:30px; right:20px; animation-delay:2s; font-size:20px; }
+    .hero-petal:nth-child(8) { bottom:20px; left:40px; animation-delay:0.5s; font-size:24px; }
+    @keyframes floatpetal {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-10px) rotate(15deg); }
+    }
+
+    /* gradient fade bottom of hero */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 70px;
+      background: linear-gradient(to bottom, transparent, #fff0f5);
+    }
+
+    /* ── Avatar ── */
+    .avatar-wrap {
+      position: absolute;
+      bottom: -48px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
     .avatar {
       width: 96px; height: 96px; border-radius: 50%;
-      background: linear-gradient(135deg, #ffb6d9 0%, #ff85b3 100%);
-      border: 3.5px solid #fff;
-      box-shadow: 0 0 0 3.5px #ffb6d9;
+      background: linear-gradient(135deg, #ffb6d9, #ff85b3);
+      border: 4px solid #fff0f5;
+      box-shadow: 0 0 0 3px #ffb6d9, 0 4px 20px rgba(220,100,140,0.25);
+      overflow: hidden;
       display: flex; align-items: center; justify-content: center;
       font-size: 44px;
-      overflow: hidden;
     }
-    .name {
+    .avatar img { width:100%; height:100%; object-fit:cover; }
+
+    /* ── Profile info ── */
+    .profile {
+      margin-top: 58px;
       text-align: center;
+      padding: 0 20px 16px;
+    }
+    .hearts { display:flex; justify-content:center; gap:4px; font-size:13px; margin-bottom:4px; }
+    .name {
       font-family: 'Pacifico', cursive;
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: #d6446b;
-      margin: 14px 0 4px;
     }
     .tagline {
-      text-align: center;
-      font-size: 0.93rem;
+      font-size: 0.88rem;
       color: #e07095;
-      margin-bottom: 6px;
       font-weight: 600;
+      margin-top: 4px;
     }
     .divider {
-      text-align: center;
-      font-size: 18px;
-      margin: 18px 0 20px;
-      letter-spacing: 6px;
-      color: #f4a8c4;
+      text-align:center; font-size:16px;
+      margin: 12px 0; letter-spacing:5px; color:#f4a8c4;
     }
-    .links { display: flex; flex-direction: column; gap: 13px; }
+
+    /* ── Tab bar ── */
+    .tabs {
+      display: flex;
+      border-bottom: 1.5px solid rgba(255,150,190,0.3);
+      margin: 0 16px;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px 4px;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #e07095;
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: all 0.2s;
+      margin-bottom: -1.5px;
+    }
+    .tab.active {
+      color: #d6446b;
+      border-bottom-color: #d6446b;
+    }
+
+    /* ── Tab content panels ── */
+    .panel { display: none; padding: 18px 16px 100px; }
+    .panel.active { display: flex; flex-direction: column; gap: 13px; }
+
+    /* ── Link buttons ── */
     .link-btn {
       display: flex; align-items: center; gap: 14px;
-      background: linear-gradient(90deg, #fff0f5 0%, #ffe4ef 100%);
-      border: 1.5px solid rgba(255,150,190,0.45);
-      border-radius: 18px; padding: 15px 20px;
+      background: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255,150,190,0.4);
+      border-radius: 18px; padding: 14px 18px;
       text-decoration: none; color: #c63061;
-      font-weight: 700; font-size: 0.98rem;
-      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
-      cursor: pointer;
+      font-weight: 700; font-size: 0.95rem;
+      transition: transform 0.18s, box-shadow 0.18s;
+      backdrop-filter: blur(8px);
     }
     .link-btn:hover {
-      background: linear-gradient(90deg, #ffe0ee 0%, #ffc8e2 100%);
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 24px rgba(210,70,110,0.18);
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 6px 20px rgba(210,70,110,0.15);
     }
     .link-btn .icon {
       width: 40px; height: 40px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0;
+      flex-shrink: 0;
     }
     .link-btn .label { flex: 1; }
-    .link-btn .arrow { font-size: 16px; opacity: 0.5; }
+    .link-btn .arrow { font-size: 15px; opacity: 0.45; }
     .icon-tiktok { background: linear-gradient(135deg,#ff6fb0,#ff4488); }
     .icon-fb     { background: linear-gradient(135deg,#ffb3d1,#e87bb5); }
-    .icon-email  { background: linear-gradient(135deg,#ffc6df,#ff85b3); }
-    .footer {
-      text-align: center; margin-top: 28px;
-      font-size: 0.85rem; color: #e094b4; font-weight: 600;
+
+    /* ── Email display card ── */
+    .email-box {
+      background: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255,150,190,0.4);
+      border-radius: 18px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+      backdrop-filter: blur(8px);
+    }
+    .email-box .icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg,#ffc6df,#ff85b3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .email-label { font-weight:700; font-size:0.95rem; color:#c63061; display:block; margin-bottom:2px; }
+    .email-address { font-size:0.82rem; color:#e07095; font-weight:600; word-break:break-all; }
+
+    /* ── About panel ── */
+    .about-card {
+      background: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255,150,190,0.4);
+      border-radius: 18px; padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+    .about-card p {
+      font-size: 0.9rem; color: #c63061; font-weight: 600;
+      line-height: 1.7; text-align: center;
+    }
+    .about-card .emoji-row {
+      text-align: center; font-size: 22px;
+      margin-top: 12px; letter-spacing: 6px;
     }
 
-    .browser-banner {
-      display: none;
-      background: linear-gradient(90deg, #ff85b3, #ffb6d9);
-      color: white;
+    /* ── Collab panel ── */
+    .collab-card {
+      background: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255,150,190,0.4);
+      border-radius: 18px; padding: 18px;
       text-align: center;
-      padding: 12px 16px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      border-radius: 16px;
-      margin-bottom: 16px;
-      line-height: 1.5;
-      z-index: 10;
-      position: relative;
+      backdrop-filter: blur(8px);
     }
-    .hearts { display: flex; justify-content: center; gap: 5px; margin-bottom: 2px; font-size: 15px; }
+    .collab-card h3 { font-family:'Pacifico',cursive; color:#d6446b; font-size:1.1rem; margin-bottom:10px; }
+    .collab-card p { font-size:0.88rem; color:#e07095; font-weight:600; line-height:1.7; }
+    .collab-email { margin-top:12px; font-size:0.85rem; color:#c63061; font-weight:800; }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 100%; max-width: 390px;
+      background: rgba(255,240,245,0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1.5px solid rgba(255,150,190,0.3);
+      display: flex;
+      padding: 10px 0 16px;
+      z-index: 100;
+    }
+    .nav-btn {
+      flex: 1; display:flex; flex-direction:column;
+      align-items:center; gap:3px;
+      cursor:pointer; padding: 4px 0;
+      transition: transform 0.15s;
+    }
+    .nav-btn:hover { transform: translateY(-2px); }
+    .nav-btn .nav-icon { font-size: 20px; }
+    .nav-btn .nav-label {
+      font-size: 0.68rem; font-weight: 700;
+      color: #e07095;
+    }
+    .nav-btn.active .nav-label { color: #d6446b; }
+    .nav-btn.active .nav-icon { filter: drop-shadow(0 0 4px #ff85b3); }
+
+    /* ── Falling petals ── */
+    .petal {
+      position: fixed; pointer-events:none; opacity:0;
+      font-size:20px; animation: falling linear infinite; z-index:0;
+    }
+    @keyframes falling {
+      0%   { transform: translateY(-60px) rotate(0deg); opacity:0.6; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity:0; }
+    }
   </style>
 </head>
 <body>
-  <div class="petal" style="left:8%;  animation-duration:7s;  animation-delay:0s;">🌸</div>
-  <div class="petal" style="left:22%; animation-duration:9s;  animation-delay:2s;">🌷</div>
-  <div class="petal" style="left:38%; animation-duration:6s;  animation-delay:1s;">🌹</div>
-  <div class="petal" style="left:55%; animation-duration:11s; animation-delay:3s;">🌸</div>
-  <div class="petal" style="left:70%; animation-duration:8s;  animation-delay:0.5s;">🌷</div>
-  <div class="petal" style="left:85%; animation-duration:10s; animation-delay:4s;">🌸</div>
-  <div class="petal" style="left:92%; animation-duration:7s;  animation-delay:1.5s;">🌹</div>
 
-  <div class="card">
-    <div class="avatar-wrap">
-      <div class="avatar">
-        <img src="photo.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
+  <div class="petal" style="left:8%;  animation-duration:7s;  animation-delay:0s;">🌸</div>
+  <div class="petal" style="left:25%; animation-duration:9s;  animation-delay:2s;">🌷</div>
+  <div class="petal" style="left:55%; animation-duration:11s; animation-delay:3s;">🌸</div>
+  <div class="petal" style="left:80%; animation-duration:8s;  animation-delay:1s;">🌹</div>
+
+  <div class="phone">
+
+    <!-- Hero banner -->
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="blob blob1"></div>
+      <div class="blob blob2"></div>
+      <div class="blob blob3"></div>
+      <div class="blob blob4"></div>
+      <div class="hero-petal">🌸</div>
+      <div class="hero-petal">🌷</div>
+      <div class="hero-petal">🌹</div>
+      <div class="hero-petal">🌸</div>
+
+      <!-- Avatar sits at bottom of hero -->
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <img src="photo.jpg" alt="Oviya Neha" />
+        </div>
       </div>
     </div>
-    <div class="browser-banner" id="tiktokBanner">
-      📱 You're in TikTok's browser!<br>
-      Tap <strong>···</strong> (top right) → <strong>"Open in browser"</strong><br>
-      so all links work properly 🌸
+
+    <!-- Profile info -->
+    <div class="profile">
+      <div class="hearts">💗 💗 💗</div>
+      <h1 class="name">Oviya Neha</h1>
+      <p class="tagline">ur fave island girlie 🌺</p>
+      <div class="divider">🌸 🌷 🌹</div>
     </div>
-    <div class="hearts">💗 💗 💗</div>
-    <h1 class="name">Oviya Neha</h1>
-    <p class="tagline">ur fave island girlie 🌺</p>
-    <div class="divider">🌸 🌷 🌹</div>
-    <div class="links">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('links', this)">🔗 Links</div>
+      <div class="tab" onclick="switchTab('about', this)">🌺 About</div>
+      <div class="tab" onclick="switchTab('collab', this)">💌 Collab</div>
+    </div>
+
+    <!-- Links panel -->
+    <div class="panel active" id="panel-links">
 
       <a class="link-btn" href="https://www.tiktok.com/@oviya_neha" target="_blank" rel="noopener">
         <div class="icon icon-tiktok">
@@ -154,7 +314,7 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="link-btn" href="https://www.facebook.com/share/1NnM2xTRHY/" id="fblink" target="_blank" rel="noopener">
+      <a class="link-btn" href="https://www.facebook.com/share/1NnM2xTRHY/" target="_blank" rel="noopener">
         <div class="icon icon-fb">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         </div>
@@ -162,65 +322,68 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="link-btn" href="mailto:realoviyaneha@gmail.com" id="maillink">
-        <div class="icon icon-email">
+      <div class="email-box">
+        <div class="icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         </div>
-        <span class="label">Email Me 💌</span>
-        <span class="arrow">→</span>
-      </a>
+        <div>
+          <span class="email-label">Email Me 💌</span>
+          <span class="email-address">realoviyaneha@gmail.com</span>
+        </div>
+      </div>
 
     </div>
-    <div class="footer">made with love 💗</div>
+
+    <!-- About panel -->
+    <div class="panel" id="panel-about">
+      <div class="about-card">
+        <p>Hey girlie! 🌸 I'm Oviya Neha, ur fave island girlie bringing you all the vibes from paradise 🌺</p>
+        <p style="margin-top:10px;">Content creator ✨ AI enthusiast 💗 island soul 🌊</p>
+        <div class="emoji-row">🌸 🌷 🌺 🌹 💗</div>
+      </div>
+    </div>
+
+    <!-- Collab panel -->
+    <div class="panel" id="panel-collab">
+      <div class="collab-card">
+        <h3>Let's Work Together 🌸</h3>
+        <p>Interested in collabs, sponsorships or partnerships? Slide into my email and let's make something cute! 💕</p>
+        <div class="collab-email">realoviyaneha@gmail.com</div>
+      </div>
+    </div>
+
+  </div><!-- end .phone -->
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="nav-btn active" id="nav-links" onclick="switchTab('links', null, this)">
+      <span class="nav-icon">🔗</span>
+      <span class="nav-label">Links</span>
+    </div>
+    <div class="nav-btn" id="nav-about" onclick="switchTab('about', null, this)">
+      <span class="nav-icon">🌺</span>
+      <span class="nav-label">About</span>
+    </div>
+    <div class="nav-btn" id="nav-collab" onclick="switchTab('collab', null, this)">
+      <span class="nav-icon">💌</span>
+      <span class="nav-label">Collab</span>
+    </div>
   </div>
 
   <script>
-    var ua = navigator.userAgent || '';
-    var isTikTok = /musical_ly|TikTok|BytedanceWebview|ByteLocale/i.test(ua);
-    var isInstagram = /Instagram/i.test(ua);
-    var isInAppBrowser = isTikTok || isInstagram;
-
-    // Show banner if inside TikTok or Instagram browser
-    if (isInAppBrowser) {
-      document.getElementById('tiktokBanner').style.display = 'block';
+    function switchTab(name, tabEl, navEl) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+      document.getElementById('panel-' + name).classList.add('active');
+      if (tabEl) tabEl.classList.add('active');
+      if (navEl) navEl.classList.add('active');
+      var matchTab = document.querySelector('.tab[onclick*="' + name + '"]');
+      var matchNav = document.getElementById('nav-' + name);
+      if (matchTab) matchTab.classList.add('active');
+      if (matchNav) matchNav.classList.add('active');
     }
-
-    // Smart Facebook link
-    document.getElementById('fblink').addEventListener('click', function(e) {
-      e.preventDefault();
-      var url = 'https://www.facebook.com/share/1NnM2xTRHY/';
-      if (isInAppBrowser) {
-        alert('Please tap ··· (top right) and choose "Open in browser" to open Facebook 💕');
-        return;
-      }
-      var isAndroid = /Android/i.test(ua);
-      var isIOS = /iPhone|iPad/i.test(ua);
-      if (isAndroid) {
-        window.location = 'fb://facewebmodal/f?href=' + encodeURIComponent(url);
-        setTimeout(function(){ window.location = url; }, 1200);
-      } else if (isIOS) {
-        window.location = 'fb://facewebmodal/f?href=' + encodeURIComponent(url);
-        setTimeout(function(){ window.location = url; }, 1200);
-      } else {
-        window.open(url, '_blank');
-      }
-    });
-
-    // Smart email link
-    document.getElementById('maillink').addEventListener('click', function(e) {
-      e.preventDefault();
-      var email = 'realoviyaneha@gmail.com';
-      if (isInAppBrowser) {
-        alert('Please tap ··· (top right) and choose "Open in browser" to use Email 💌');
-        return;
-      }
-      var isAndroid = /Android/i.test(ua);
-      if (isAndroid) {
-        window.location = 'intent://send?to=' + email + '#Intent;scheme=mailto;package=com.google.android.gm;end';
-      } else {
-        window.location = 'mailto:' + email;
-      }
-    });
   </script>
+
 </body>
 </html>
