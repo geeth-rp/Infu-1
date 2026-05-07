@@ -102,6 +102,21 @@
       text-align: center; margin-top: 28px;
       font-size: 0.85rem; color: #e094b4; font-weight: 600;
     }
+
+    .browser-banner {
+      display: none;
+      background: linear-gradient(90deg, #ff85b3, #ffb6d9);
+      color: white;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+      z-index: 10;
+      position: relative;
+    }
     .hearts { display: flex; justify-content: center; gap: 5px; margin-bottom: 2px; font-size: 15px; }
   </style>
 </head>
@@ -119,6 +134,11 @@
       <div class="avatar">
         <img src="photo.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />
       </div>
+    </div>
+    <div class="browser-banner" id="tiktokBanner">
+      📱 You're in TikTok's browser!<br>
+      Tap <strong>···</strong> (top right) → <strong>"Open in browser"</strong><br>
+      so all links work properly 🌸
     </div>
     <div class="hearts">💗 💗 💗</div>
     <h1 class="name">Oviya Neha</h1>
@@ -155,28 +175,46 @@
   </div>
 
   <script>
-    // Smart Facebook link - opens app on mobile
+    var ua = navigator.userAgent || '';
+    var isTikTok = /musical_ly|TikTok|BytedanceWebview|ByteLocale/i.test(ua);
+    var isInstagram = /Instagram/i.test(ua);
+    var isInAppBrowser = isTikTok || isInstagram;
+
+    // Show banner if inside TikTok or Instagram browser
+    if (isInAppBrowser) {
+      document.getElementById('tiktokBanner').style.display = 'block';
+    }
+
+    // Smart Facebook link
     document.getElementById('fblink').addEventListener('click', function(e) {
       e.preventDefault();
       var url = 'https://www.facebook.com/share/1NnM2xTRHY/';
-      var isAndroid = /Android/i.test(navigator.userAgent);
-      var isIOS = /iPhone|iPad/i.test(navigator.userAgent);
+      if (isInAppBrowser) {
+        alert('Please tap ··· (top right) and choose "Open in browser" to open Facebook 💕');
+        return;
+      }
+      var isAndroid = /Android/i.test(ua);
+      var isIOS = /iPhone|iPad/i.test(ua);
       if (isAndroid) {
         window.location = 'fb://facewebmodal/f?href=' + encodeURIComponent(url);
         setTimeout(function(){ window.location = url; }, 1200);
       } else if (isIOS) {
-        window.location = 'fb://profile';
+        window.location = 'fb://facewebmodal/f?href=' + encodeURIComponent(url);
         setTimeout(function(){ window.location = url; }, 1200);
       } else {
         window.open(url, '_blank');
       }
     });
 
-    // Smart email link - opens Gmail app on Android, mail chooser on iOS
+    // Smart email link
     document.getElementById('maillink').addEventListener('click', function(e) {
       e.preventDefault();
       var email = 'realoviyaneha@gmail.com';
-      var isAndroid = /Android/i.test(navigator.userAgent);
+      if (isInAppBrowser) {
+        alert('Please tap ··· (top right) and choose "Open in browser" to use Email 💌');
+        return;
+      }
+      var isAndroid = /Android/i.test(ua);
       if (isAndroid) {
         window.location = 'intent://send?to=' + email + '#Intent;scheme=mailto;package=com.google.android.gm;end';
       } else {
